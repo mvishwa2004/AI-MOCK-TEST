@@ -60,8 +60,6 @@ const generateAdaptiveMockExamFlow = ai.defineFlow(
     outputSchema: GenerateAdaptiveMockExamOutputSchema,
   },
   async (input) => {
-    // The studentId is used for context, but the weakestTopics are provided directly to the prompt.
-    // In a full application, 'weakestTopics' might be fetched from a database based on 'studentId'.
     const { output } = await generateAdaptiveMockExamPrompt(input);
     return output!;
   }

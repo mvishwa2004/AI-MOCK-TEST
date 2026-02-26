@@ -17,6 +17,7 @@ export default function NewExamPage() {
   const searchParams = useSearchParams()
   const { getUser, saveExam } = useAppStore()
   const [loading, setLoading] = useState(false)
+  const [mounted, setMounted] = useState(false)
   
   const [examType, setExamType] = useState("SBI PO")
   const [difficulty, setDifficulty] = useState("medium")
@@ -24,6 +25,7 @@ export default function NewExamPage() {
   const [isAdaptive, setIsAdaptive] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     if (searchParams.get("adaptive") === "true") {
       setIsAdaptive(true)
     }
@@ -86,6 +88,14 @@ export default function NewExamPage() {
     }
   }
 
+  if (!mounted) {
+    return (
+      <div className="container max-w-2xl mx-auto py-10 px-4 flex justify-center items-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
   return (
     <div className="container max-w-2xl mx-auto py-10 px-4">
       <Card className="glass-morphism border-white/10">
@@ -133,7 +143,7 @@ export default function NewExamPage() {
             <div className="space-y-2">
               <Label htmlFor="exam-type">Exam Target</Label>
               <Select defaultValue={examType} onValueChange={setExamType}>
-                <SelectTrigger id="exam-type" className="bg-background/50 border-white/10">
+                <SelectTrigger id="exam-type" className="bg-background/50 border-white/10" suppressHydrationWarning>
                   <SelectValue placeholder="Select target" />
                 </SelectTrigger>
                 <SelectContent>
@@ -146,7 +156,7 @@ export default function NewExamPage() {
             <div className="space-y-2">
               <Label htmlFor="difficulty">Difficulty</Label>
               <Select defaultValue={difficulty} onValueChange={setDifficulty}>
-                <SelectTrigger id="difficulty" className="bg-background/50 border-white/10">
+                <SelectTrigger id="difficulty" className="bg-background/50 border-white/10" suppressHydrationWarning>
                   <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
                 <SelectContent>
@@ -161,7 +171,7 @@ export default function NewExamPage() {
           <div className="space-y-2">
             <Label htmlFor="num-questions">Number of Questions</Label>
             <Select defaultValue={numQuestions} onValueChange={setNumQuestions}>
-              <SelectTrigger id="num-questions" className="bg-background/50 border-white/10">
+              <SelectTrigger id="num-questions" className="bg-background/50 border-white/10" suppressHydrationWarning>
                 <SelectValue placeholder="Select amount" />
               </SelectTrigger>
               <SelectContent>
@@ -176,6 +186,7 @@ export default function NewExamPage() {
             className="w-full h-12 text-lg bg-primary hover:bg-primary/90" 
             onClick={handleStart}
             disabled={loading}
+            suppressHydrationWarning
           >
             {loading ? (
               <>
