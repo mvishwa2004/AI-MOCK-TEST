@@ -31,10 +31,6 @@ const GenerateAdaptiveMockExamOutputSchema = z.object({
 });
 export type GenerateAdaptiveMockExamOutput = z.infer<typeof GenerateAdaptiveMockExamOutputSchema>;
 
-export async function generateAdaptiveMockExam(input: GenerateAdaptiveMockExamInput): Promise<GenerateAdaptiveMockExamOutput> {
-  return generateAdaptiveMockExamFlow(input);
-}
-
 const generateAdaptiveMockExamPrompt = ai.definePrompt({
   name: 'generateAdaptiveMockExamPrompt',
   input: { schema: GenerateAdaptiveMockExamInputSchema },
@@ -54,14 +50,7 @@ For each question, ensure the following:
 - Clearly state the single correct answer option (e.g., "A").
 - Tag the question with one of the specified 'Weakest Topics' that it covers.
 
-Ensure all generated questions are unique, relevant to bank exams, and adhere strictly to the requested difficulty level. The response must be a JSON object containing an array of questions.
-
-Generate the questions in a JSON array format matching the following schema:
-
-```json
-{{jsonSchema OutputSchema}}
-```
-`,
+Ensure all generated questions are unique, relevant to bank exams, and adhere strictly to the requested difficulty level. The response must be a JSON object containing an array of questions.`,
 });
 
 const generateAdaptiveMockExamFlow = ai.defineFlow(
@@ -77,3 +66,7 @@ const generateAdaptiveMockExamFlow = ai.defineFlow(
     return output!;
   }
 );
+
+export async function generateAdaptiveMockExam(input: GenerateAdaptiveMockExamInput): Promise<GenerateAdaptiveMockExamOutput> {
+  return generateAdaptiveMockExamFlow(input);
+}
