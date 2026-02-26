@@ -26,7 +26,8 @@ export default function NewExamPage() {
 
   useEffect(() => {
     setMounted(true)
-    if (searchParams.get("adaptive") === "true") {
+    const adaptiveParam = searchParams.get("adaptive")
+    if (adaptiveParam === "true") {
       setIsAdaptive(true)
     }
     const user = getUser()
@@ -49,7 +50,7 @@ export default function NewExamPage() {
         // Format adaptive output to match standard question schema
         questionsResult = {
           questions: questionsResult.examQuestions.map((q, i) => ({
-            questionId: `Q-${i}`,
+            questionId: `Q-${i}-${Date.now()}`,
             questionText: q.question,
             options: q.options,
             correctAnswer: q.correctAnswer,
@@ -110,7 +111,7 @@ export default function NewExamPage() {
           <div className="space-y-2">
             <Label>Mode</Label>
             <RadioGroup 
-              defaultValue={isAdaptive ? "adaptive" : "standard"} 
+              value={isAdaptive ? "adaptive" : "standard"} 
               onValueChange={(val) => setIsAdaptive(val === "adaptive")}
               className="grid grid-cols-2 gap-4"
             >
@@ -118,7 +119,7 @@ export default function NewExamPage() {
                 <RadioGroupItem value="standard" id="standard" className="peer sr-only" />
                 <Label
                   htmlFor="standard"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer"
                 >
                   <Target className="mb-3 h-6 w-6" />
                   <span className="text-sm font-medium">Standard</span>
@@ -129,7 +130,7 @@ export default function NewExamPage() {
                 <RadioGroupItem value="adaptive" id="adaptive" className="peer sr-only" />
                 <Label
                   htmlFor="adaptive"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer"
                 >
                   <BrainCircuit className="mb-3 h-6 w-6" />
                   <span className="text-sm font-medium">Adaptive</span>
@@ -142,8 +143,8 @@ export default function NewExamPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="exam-type">Exam Target</Label>
-              <Select defaultValue={examType} onValueChange={setExamType}>
-                <SelectTrigger id="exam-type" className="bg-background/50 border-white/10" suppressHydrationWarning>
+              <Select value={examType} onValueChange={setExamType}>
+                <SelectTrigger id="exam-type" className="bg-background/50 border-white/10">
                   <SelectValue placeholder="Select target" />
                 </SelectTrigger>
                 <SelectContent>
@@ -155,8 +156,8 @@ export default function NewExamPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="difficulty">Difficulty</Label>
-              <Select defaultValue={difficulty} onValueChange={setDifficulty}>
-                <SelectTrigger id="difficulty" className="bg-background/50 border-white/10" suppressHydrationWarning>
+              <Select value={difficulty} onValueChange={setDifficulty}>
+                <SelectTrigger id="difficulty" className="bg-background/50 border-white/10">
                   <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
                 <SelectContent>
@@ -170,8 +171,8 @@ export default function NewExamPage() {
 
           <div className="space-y-2">
             <Label htmlFor="num-questions">Number of Questions</Label>
-            <Select defaultValue={numQuestions} onValueChange={setNumQuestions}>
-              <SelectTrigger id="num-questions" className="bg-background/50 border-white/10" suppressHydrationWarning>
+            <Select value={numQuestions} onValueChange={setNumQuestions}>
+              <SelectTrigger id="num-questions" className="bg-background/50 border-white/10">
                 <SelectValue placeholder="Select amount" />
               </SelectTrigger>
               <SelectContent>
@@ -186,7 +187,6 @@ export default function NewExamPage() {
             className="w-full h-12 text-lg bg-primary hover:bg-primary/90" 
             onClick={handleStart}
             disabled={loading}
-            suppressHydrationWarning
           >
             {loading ? (
               <>
