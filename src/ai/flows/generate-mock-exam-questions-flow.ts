@@ -51,25 +51,21 @@ Here are the requirements for the questions:
 - **Difficulty Level**: {{#if difficultyLevel}}Focus on "{{difficultyLevel}}" difficulty.{{else}}Vary the difficulty between easy, medium, and hard.{{/if}}
 - **Topic Focus**:
   {{#if weakTopics}}
-  - **Weak Topics (Prioritize)**: Focus heavily on these topics to help the student improve: {{#each weakTopics}} "{{this}}"{{/each}}.
+  - **Weak Topics (Prioritize)**: Focus heavily on these topics: {{#each weakTopics}} "{{this}}"{{/each}}.
   {{/if}}
   {{#if strongTopics}}
-  - **Strong Topics (Include but don't overemphasize)**: Include some questions from these topics: {{#each strongTopics}} "{{this}}"{{/each}}.
+  - **Strong Topics (Include but don't overemphasize)**: Include some questions from: {{#each strongTopics}} "{{this}}"{{/each}}.
   {{/if}}
   {{#unless weakTopics}}
   - If no specific weak topics are provided, cover a broad range of topics relevant to the {{{examType}}} exam.
   {{/unless}}
 - **Uniqueness**:
   {{#if previousQuestionContext}}
-  - Do not generate questions that are identical in concept or phrasing to the following previous questions summaries/keywords: {{#each previousQuestionContext}} "{{this}}"{{/each}}.
-  - Strive for novel scenarios and data sets where applicable.
-  {{else}}
-  - Ensure all generated questions are unique and fresh.
+  - Do not generate questions identical in concept or phrasing to: {{#each previousQuestionContext}} "{{this}}"{{/each}}.
   {{/if}}
-- **Format**: Each question must be a multiple-choice question with 2 to 5 options. Provide a clear correct answer and a concise explanation.
+- **Format**: Each question must be a multiple-choice question. Provide a clear correct answer and a concise explanation.
 
-Generate the questions in a JSON array format that matches the output schema provided. Ensure all fields in the schema are populated accurately.
-`
+Generate the questions in a JSON array format that matches the output schema.`,
 });
 
 // Define the Genkit flow
