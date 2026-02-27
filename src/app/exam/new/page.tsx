@@ -32,7 +32,7 @@ export default function NewExamPage() {
     }
     const user = getUser()
     if (user.difficultyPreference) setDifficulty(user.difficultyPreference)
-  }, [searchParams])
+  }, [searchParams, getUser])
 
   const handleStart = async () => {
     setLoading(true)
@@ -99,7 +99,7 @@ export default function NewExamPage() {
 
   return (
     <div className="container max-w-2xl mx-auto py-10 px-4">
-      <Card className="glass-morphism border-white/10">
+      <Card className="glass-morphism border-white/10" suppressHydrationWarning>
         <CardHeader className="text-center">
           <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
             <Zap className="text-primary w-6 h-6" />
