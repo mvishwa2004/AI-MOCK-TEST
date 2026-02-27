@@ -50,7 +50,7 @@ For each question:
 - State the correct answer option (e.g., "A").
 - Tag with one of the specified 'Weakest Topics'.
 
-Ensure all questions are unique and relevant to bank exams.`,
+Ensure all questions are unique and relevant to bank exams. Generate the questions in a JSON format matching the output schema.`,
 });
 
 const generateAdaptiveMockExamFlow = ai.defineFlow(
