@@ -24,6 +24,7 @@ function NewExamForm() {
   const [numQuestions, setNumQuestions] = useState("5")
   const [isAdaptive, setIsAdaptive] = useState(false)
 
+  // Avoid hydration mismatch by deferring reading from browser APIs
   useEffect(() => {
     setMounted(true)
     const adaptiveParam = searchParams.get("adaptive")
@@ -34,7 +35,7 @@ function NewExamForm() {
     if (user && user.difficultyPreference) {
       setDifficulty(user.difficultyPreference)
     }
-  }, [searchParams])
+  }, [searchParams, getUser])
 
   const handleStart = async () => {
     if (!mounted) return
@@ -124,7 +125,7 @@ function NewExamForm() {
               >
                 <Target className="mb-3 h-6 w-6" />
                 <span className="text-sm font-medium">Standard</span>
-                <span className="text-xs text-muted-foreground text-center mt-1">General coverage</span>
+                <span className="text-xs text-muted-foreground text-center mt-1">General curriculum coverage</span>
               </Label>
             </div>
             <div>
@@ -135,7 +136,7 @@ function NewExamForm() {
               >
                 <BrainCircuit className="mb-3 h-6 w-6" />
                 <span className="text-sm font-medium">Adaptive</span>
-                <span className="text-xs text-muted-foreground text-center mt-1">Focus on weak areas</span>
+                <span className="text-xs text-muted-foreground text-center mt-1">Focus on weak topics</span>
               </Label>
             </div>
           </RadioGroup>
@@ -177,7 +178,7 @@ function NewExamForm() {
               <SelectValue placeholder="Amount" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="5">5 Questions</SelectItem>
+              <SelectItem value="5">5 Questions (Fast)</SelectItem>
               <SelectItem value="10">10 Questions</SelectItem>
             </SelectContent>
           </Select>

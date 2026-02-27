@@ -1,8 +1,7 @@
 'use server';
 /**
- * @fileOverview This file implements a Genkit flow for evaluating student answers
- * to a mock exam. It combines local deterministic scoring with AI-driven
- * qualitative feedback for maximum speed and accuracy.
+ * @fileOverview Evaluates student answers with robust string comparison
+ * and generates qualitative AI feedback.
  */
 
 import { ai } from '@/ai/genkit';
@@ -34,7 +33,7 @@ const QuestionEvaluationSchema = z.object({
   correctAnswer: z.string(),
   isCorrect: z.boolean(),
   score: z.number(),
-  detailedFeedback: z.string().describe('Explanation of why the answer was correct or incorrect and how to solve it.'),
+  detailedFeedback: z.string().describe('Short explanation of why the answer was correct or incorrect.'),
 });
 
 const EvaluateAnswersAndProvideFeedbackOutputSchema = z.object({
@@ -58,17 +57,17 @@ const evaluatePrompt = ai.definePrompt({
     })
   },
   output: { schema: EvaluateAnswersAndProvideFeedbackOutputSchema },
-  prompt: `You are an expert bank exam coach. I have already calculated the raw scores for this student's exam.
+  prompt: `You are an expert bank exam coach. I have already calculated the raw scores.
   
 Student Score: {{localOverallScore}}%
 
 Your task is to provide the qualitative layer of feedback. 
-For each question, provide a 'detailedFeedback' explaining the logic, shortcuts, and why their choice was right or wrong.
 
 Provide:
 1. 'overallFeedback': A motivational summary.
 2. 'topicAnalysis': Performance per topic.
 3. 'weakestTopics': Identify topics where performance was low.
+4. 'detailedFeedback' for each question: Explain the logic briefly.
 
 Here is the attempt data:
 {{#each examAttempt}}
@@ -80,16 +79,31 @@ Here is the attempt data:
 {{/each}}`,
 });
 
+/**
+ * Robustly cleans an answer string for comparison.
+ * Removes "Option ", "A.", whitespace, and converts to uppercase.
+ */
+function cleanAnswer(ans: string): string {
+  if (!ans) return "";
+  return ans
+    .replace(/^option\s+/i, "")
+    .replace(/^([A-D])\./i, "$1")
+    .trim()
+    .toUpperCase()
+    .charAt(0); // Take only the first character (A, B, C, or D)
+}
+
 export async function evaluateAnswersAndProvideFeedback(
   input: EvaluateAnswersAndProvideFeedbackInput
 ): Promise<EvaluateAnswersAndProvideFeedbackOutput> {
-  // 1. Calculate accuracy deterministically (resilient to case and whitespace)
+  // 1. Calculate accuracy deterministically with robust cleaning
   const processedAttempts = input.examAttempt.map(attempt => {
-    const studentAns = (attempt.studentAnswer || "").trim().toUpperCase();
-    const correctAns = (attempt.correctAnswer || "").trim().toUpperCase();
+    const studentAnsClean = cleanAnswer(attempt.studentAnswer);
+    const correctAnsClean = cleanAnswer(attempt.correctAnswer);
+    
     return {
       ...attempt,
-      isCorrect: studentAns === correctAns,
+      isCorrect: studentAnsClean !== "" && studentAnsClean === correctAnsClean,
     };
   });
 
@@ -104,7 +118,7 @@ export async function evaluateAnswersAndProvideFeedback(
 
   if (!output) throw new Error('Feedback generation failed');
 
-  // 3. Merge local accuracy with AI feedback to ensure 100% data integrity
+  // 3. Merge local accuracy with AI feedback to ensure data integrity
   return {
     ...output,
     overallScore: localOverallScore,
