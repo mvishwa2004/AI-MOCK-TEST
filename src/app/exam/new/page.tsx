@@ -144,10 +144,10 @@ function NewExamForm() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="exam-type">Exam Target</Label>
+            <Label htmlFor="exam-target">Exam Target</Label>
             <Select value={examType} onValueChange={setExamType}>
-              <SelectTrigger id="exam-type">
-                <SelectValue placeholder="Target" />
+              <SelectTrigger id="exam-target">
+                <SelectValue placeholder="Select Target" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="SBI PO">SBI PO</SelectItem>
@@ -157,10 +157,10 @@ function NewExamForm() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="difficulty">Difficulty</Label>
+            <Label htmlFor="difficulty-level">Difficulty</Label>
             <Select value={difficulty} onValueChange={setDifficulty}>
-              <SelectTrigger id="difficulty">
-                <SelectValue placeholder="Difficulty" />
+              <SelectTrigger id="difficulty-level">
+                <SelectValue placeholder="Select Difficulty" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="easy">Easy</SelectItem>
@@ -172,10 +172,10 @@ function NewExamForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="num-questions">Questions</Label>
+          <Label htmlFor="question-count">Number of Questions</Label>
           <Select value={numQuestions} onValueChange={setNumQuestions}>
-            <SelectTrigger id="num-questions">
-              <SelectValue placeholder="Amount" />
+            <SelectTrigger id="question-count">
+              <SelectValue placeholder="Select Amount" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="5">5 Questions (Fast)</SelectItem>

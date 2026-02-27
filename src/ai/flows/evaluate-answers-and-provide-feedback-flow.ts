@@ -81,7 +81,7 @@ Here is the attempt data:
 
 /**
  * Robustly cleans an answer string for comparison.
- * Removes "Option ", "A.", whitespace, and converts to uppercase.
+ * Handles formats like "Option A", "A.", "A", and variations of case/spacing.
  */
 function cleanAnswer(ans: string): string {
   if (!ans) return "";
@@ -90,7 +90,7 @@ function cleanAnswer(ans: string): string {
     .replace(/^([A-D])\./i, "$1")
     .trim()
     .toUpperCase()
-    .charAt(0); // Take only the first character (A, B, C, or D)
+    .charAt(0);
 }
 
 export async function evaluateAnswersAndProvideFeedback(

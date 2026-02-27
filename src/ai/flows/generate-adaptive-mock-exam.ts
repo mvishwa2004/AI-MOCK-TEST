@@ -2,10 +2,6 @@
 /**
  * @fileOverview This file implements a Genkit flow to generate a personalized mock exam
  * tailored to a student's weakest topics and desired difficulty level.
- *
- * - generateAdaptiveMockExam - A function that handles the adaptive mock exam generation process.
- * - GenerateAdaptiveMockExamInput - The input type for the generateAdaptiveMockExam function.
- * - GenerateAdaptiveMockExamOutput - The return type for the generateAdaptiveMockExam function.
  */
 
 import { ai } from '@/ai/genkit';
@@ -22,7 +18,7 @@ export type GenerateAdaptiveMockExamInput = z.infer<typeof GenerateAdaptiveMockE
 const ExamQuestionSchema = z.object({
   question: z.string(),
   options: z.array(z.string()).length(4),
-  correctAnswer: z.string(),
+  correctAnswer: z.string().describe('The correct answer option label (e.g., "A", "B", "C", or "D").'),
   topic: z.string(),
 });
 
@@ -39,18 +35,16 @@ const generateAdaptiveMockExamPrompt = ai.definePrompt({
 
 Generate a mock exam for a student, focusing specifically on their identified weakest topics.
 
-Details for generating the exam:
+Details:
 - Weakest Topics: {{{weakestTopics}}}
-- Number of Questions: {{{numQuestions}}} (distribute evenly among the weakest topics)
+- Number of Questions: {{{numQuestions}}}
 - Difficulty Level: {{{difficultyLevel}}}
 
 For each question:
-- Provide the full question text.
-- Provide exactly four distinct answer options (A, B, C, D).
-- State the correct answer option (e.g., "A").
-- Tag with one of the specified 'Weakest Topics'.
-
-Ensure all questions are unique and relevant to bank exams.`,
+- Provide full question text.
+- Provide exactly four distinct answer options.
+- State the correct answer label (MUST BE exactly "A", "B", "C", or "D").
+- Tag with one of the specified 'Weakest Topics'.`,
 });
 
 const generateAdaptiveMockExamFlow = ai.defineFlow(
