@@ -146,7 +146,7 @@ export default function NewExamPage() {
             <div className="space-y-2">
               <Label htmlFor="exam-type">Exam Target</Label>
               <Select value={examType} onValueChange={setExamType}>
-                <SelectTrigger id="exam-type" className="bg-background/50 border-white/10" hydration-warning="true">
+                <SelectTrigger id="exam-type" className="bg-background/50 border-white/10" suppressHydrationWarning>
                   <SelectValue placeholder="Select target" />
                 </SelectTrigger>
                 <SelectContent>
@@ -159,7 +159,7 @@ export default function NewExamPage() {
             <div className="space-y-2">
               <Label htmlFor="difficulty">Difficulty</Label>
               <Select value={difficulty} onValueChange={setDifficulty}>
-                <SelectTrigger id="difficulty" className="bg-background/50 border-white/10" hydration-warning="true">
+                <SelectTrigger id="difficulty" className="bg-background/50 border-white/10" suppressHydrationWarning>
                   <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
                 <SelectContent>
@@ -174,7 +174,7 @@ export default function NewExamPage() {
           <div className="space-y-2">
             <Label htmlFor="num-questions">Number of Questions</Label>
             <Select value={numQuestions} onValueChange={setNumQuestions}>
-              <SelectTrigger id="num-questions" className="bg-background/50 border-white/10" hydration-warning="true">
+              <SelectTrigger id="num-questions" className="bg-background/50 border-white/10" suppressHydrationWarning>
                 <SelectValue placeholder="Select amount" />
               </SelectTrigger>
               <SelectContent>
