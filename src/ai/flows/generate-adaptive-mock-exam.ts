@@ -12,22 +12,22 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
 const GenerateAdaptiveMockExamInputSchema = z.object({
-  studentId: z.string().describe('The ID of the student for whom the exam is being generated.'),
-  weakestTopics: z.array(z.string()).describe('A list of topics where the student has shown weakness.'),
-  numQuestions: z.number().int().positive().default(10).describe('The total number of questions to generate.'),
-  difficultyLevel: z.enum(['easy', 'medium', 'hard']).default('medium').describe('The desired difficulty level.'),
+  studentId: z.string(),
+  weakestTopics: z.array(z.string()),
+  numQuestions: z.number().int().positive().default(10),
+  difficultyLevel: z.enum(['easy', 'medium', 'hard']).default('medium'),
 });
 export type GenerateAdaptiveMockExamInput = z.infer<typeof GenerateAdaptiveMockExamInputSchema>;
 
 const ExamQuestionSchema = z.object({
-  question: z.string().describe('The text of the exam question.'),
-  options: z.array(z.string()).length(4).describe('An array of exactly four possible answer options (A, B, C, D).'),
-  correctAnswer: z.string().describe('The correct answer option (e.g., "A", "B").'),
-  topic: z.string().describe('The specific topic this question belongs to.'),
+  question: z.string(),
+  options: z.array(z.string()).length(4),
+  correctAnswer: z.string(),
+  topic: z.string(),
 });
 
 const GenerateAdaptiveMockExamOutputSchema = z.object({
-  examQuestions: z.array(ExamQuestionSchema).describe('An array of generated exam questions.'),
+  examQuestions: z.array(ExamQuestionSchema),
 });
 export type GenerateAdaptiveMockExamOutput = z.infer<typeof GenerateAdaptiveMockExamOutputSchema>;
 
@@ -50,7 +50,7 @@ For each question:
 - State the correct answer option (e.g., "A").
 - Tag with one of the specified 'Weakest Topics'.
 
-Ensure all questions are unique and relevant to bank exams. Generate the questions in a JSON format matching the output schema.`,
+Ensure all questions are unique and relevant to bank exams.`,
 });
 
 const generateAdaptiveMockExamFlow = ai.defineFlow(

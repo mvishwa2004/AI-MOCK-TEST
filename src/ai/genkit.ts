@@ -1,6 +1,7 @@
 import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/google-genai';
 
+// Using provided API key
 const apiKey = 'AIzaSyAczuu2Oy4nDBnMRYuHH4dZ3JJpDehXqsQ';
 
 export const ai = genkit({

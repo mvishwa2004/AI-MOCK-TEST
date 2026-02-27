@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
-import { Loader2, Timer, ChevronRight, ChevronLeft, Send } from "lucide-react"
+import { Loader2, Timer, ChevronRight, ChevronLeft, Send, Sparkles } from "lucide-react"
 import { evaluateAnswersAndProvideFeedback } from "@/ai/flows/evaluate-answers-and-provide-feedback-flow"
 
 export default function ExamSessionPage() {
@@ -20,7 +20,7 @@ export default function ExamSessionPage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(300) // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(300)
 
   useEffect(() => {
     const allExams = getExams()
@@ -30,7 +30,7 @@ export default function ExamSessionPage() {
       return
     }
     setExam(currentExam)
-    setTimeLeft(currentExam.questions.length * 60) // 1 minute per question
+    setTimeLeft(currentExam.questions.length * 60)
   }, [params.id])
 
   useEffect(() => {
@@ -81,7 +81,8 @@ export default function ExamSessionPage() {
       router.push(`/exam/${exam.id}/results`)
     } catch (error) {
       console.error(error)
-      alert("Submission failed. Retrying...")
+      alert("Evaluation timed out. Don't worry, your progress is saved. Check your dashboard in a moment.")
+      router.push("/dashboard")
     } finally {
       setSubmitting(false)
     }
@@ -123,7 +124,7 @@ export default function ExamSessionPage() {
           <CardContent>
             <RadioGroup value={answers[q.questionId]} onValueChange={handleSelectAnswer} className="space-y-3">
               {q.options.map((option, i) => {
-                const label = String.fromCharCode(65 + i) // A, B, C, D
+                const label = String.fromCharCode(65 + i)
                 return (
                   <div key={i} className="flex items-center space-x-2">
                     <RadioGroupItem value={label} id={`opt-${i}`} className="sr-only peer" />
@@ -147,7 +148,7 @@ export default function ExamSessionPage() {
           <Button 
             variant="ghost" 
             onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
-            disabled={currentIndex === 0}
+            disabled={currentIndex === 0 || submitting}
             className="text-muted-foreground hover:text-white"
           >
             <ChevronLeft className="mr-2 w-4 h-4" /> Previous
@@ -155,22 +156,39 @@ export default function ExamSessionPage() {
 
           {currentIndex === exam.questions.length - 1 ? (
             <Button 
-              className="bg-accent hover:bg-accent/80 px-8" 
+              className="bg-accent hover:bg-accent/80 px-8 relative overflow-hidden" 
               onClick={handleSubmit}
               disabled={submitting}
             >
-              {submitting ? <Loader2 className="animate-spin mr-2" /> : <Send className="mr-2 w-4 h-4" />}
-              Finish Exam
+              {submitting ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="animate-spin w-4 h-4" />
+                  <span>AI Analyzing Performance...</span>
+                </div>
+              ) : (
+                <>
+                  <Send className="mr-2 w-4 h-4" />
+                  Finish Exam
+                </>
+              )}
             </Button>
           ) : (
             <Button 
               className="bg-primary hover:bg-primary/90 px-8" 
               onClick={() => setCurrentIndex(prev => prev + 1)}
+              disabled={submitting}
             >
               Next <ChevronRight className="ml-2 w-4 h-4" />
             </Button>
           )}
         </div>
+        
+        {submitting && (
+          <p className="text-center text-xs text-muted-foreground animate-pulse mt-4 flex items-center justify-center gap-2">
+            <Sparkles className="w-3 h-3 text-accent" />
+            Generating deep qualitative feedback. This takes 10-15 seconds.
+          </p>
+        )}
       </div>
     </div>
   )
