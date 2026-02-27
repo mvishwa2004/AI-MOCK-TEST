@@ -3,10 +3,6 @@
  * @fileOverview This file implements a Genkit flow for evaluating student answers
  * to a mock exam. It combines local deterministic scoring with AI-driven
  * qualitative feedback for maximum speed and accuracy.
- *
- * - evaluateAnswersAndProvideFeedback - A function to trigger the evaluation process.
- * - EvaluateAnswersAndProvideFeedbackInput - The input type for the evaluation function.
- * - EvaluateAnswersAndProvideFeedbackOutput - The return type for the evaluation function.
  */
 
 import { ai } from '@/ai/genkit';
@@ -66,12 +62,12 @@ const evaluatePrompt = ai.definePrompt({
   
 Student Score: {{localOverallScore}}%
 
-Your task is to provide the qualitative "Human" layer of feedback. 
-For each question, provide a 'detailedFeedback' explaining the logic, the shortcuts that could have been used, and why their choice was right or wrong.
+Your task is to provide the qualitative layer of feedback. 
+For each question, provide a 'detailedFeedback' explaining the logic, shortcuts, and why their choice was right or wrong.
 
-Then provide:
-1. 'overallFeedback': A motivational but honest summary of their attempt.
-2. 'topicAnalysis': An analysis of how they did per topic.
+Provide:
+1. 'overallFeedback': A motivational summary.
+2. 'topicAnalysis': Performance per topic.
 3. 'weakestTopics': Identify topics where performance was low.
 
 Here is the attempt data:
@@ -87,16 +83,20 @@ Here is the attempt data:
 export async function evaluateAnswersAndProvideFeedback(
   input: EvaluateAnswersAndProvideFeedbackInput
 ): Promise<EvaluateAnswersAndProvideFeedbackOutput> {
-  // 1. Calculate accuracy deterministically to save AI reasoning time
-  const processedAttempts = input.examAttempt.map(attempt => ({
-    ...attempt,
-    isCorrect: attempt.studentAnswer === attempt.correctAnswer,
-  }));
+  // 1. Calculate accuracy deterministically (resilient to case and whitespace)
+  const processedAttempts = input.examAttempt.map(attempt => {
+    const studentAns = (attempt.studentAnswer || "").trim().toUpperCase();
+    const correctAns = (attempt.correctAnswer || "").trim().toUpperCase();
+    return {
+      ...attempt,
+      isCorrect: studentAns === correctAns,
+    };
+  });
 
   const correctCount = processedAttempts.filter(p => p.isCorrect).length;
-  const localOverallScore = (correctCount / processedAttempts.length) * 100;
+  const localOverallScore = processedAttempts.length > 0 ? (correctCount / processedAttempts.length) * 100 : 0;
 
-  // 2. AI generates the feedback
+  // 2. AI generates qualitative feedback
   const { output } = await evaluatePrompt({
     examAttempt: processedAttempts,
     localOverallScore
@@ -104,7 +104,7 @@ export async function evaluateAnswersAndProvideFeedback(
 
   if (!output) throw new Error('Feedback generation failed');
 
-  // 3. Final sanitization: ensure AI didn't hallucinate the basic facts
+  // 3. Merge local accuracy with AI feedback to ensure 100% data integrity
   return {
     ...output,
     overallScore: localOverallScore,

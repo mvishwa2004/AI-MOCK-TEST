@@ -15,7 +15,7 @@ import { generateAdaptiveMockExam } from "@/ai/flows/generate-adaptive-mock-exam
 function NewExamForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { getUser, getExams, saveExam } = useAppStore()
+  const { getUser, saveExam } = useAppStore()
   const [loading, setLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
   
@@ -44,19 +44,19 @@ function NewExamForm() {
       let questionsResult
       
       if (isAdaptive) {
-        questionsResult = await generateAdaptiveMockExam({
+        const adaptiveRes = await generateAdaptiveMockExam({
           studentId: user.id,
           weakestTopics: user.weakTopics,
           numQuestions: parseInt(numQuestions),
           difficultyLevel: difficulty as any
         })
         questionsResult = {
-          questions: questionsResult.examQuestions.map((q, i) => ({
-            questionId: `Q-${i}-${Date.now()}`,
+          questions: adaptiveRes.examQuestions.map((q, i) => ({
+            questionId: `Q-ADAPT-${i}-${Date.now()}`,
             questionText: q.question,
             options: q.options,
             correctAnswer: q.correctAnswer,
-            explanation: "Review based on topic " + q.topic,
+            explanation: "Focus review on " + q.topic,
             topic: q.topic,
             difficulty: difficulty as any
           }))
@@ -120,22 +120,22 @@ function NewExamForm() {
               <RadioGroupItem value="standard" id="standard" className="peer sr-only" />
               <Label
                 htmlFor="standard"
-                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer h-full"
+                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary transition-all cursor-pointer h-full"
               >
                 <Target className="mb-3 h-6 w-6" />
                 <span className="text-sm font-medium">Standard</span>
-                <span className="text-xs text-muted-foreground text-center mt-1">General curriculum coverage</span>
+                <span className="text-xs text-muted-foreground text-center mt-1">General coverage</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="adaptive" id="adaptive" className="peer sr-only" />
               <Label
                 htmlFor="adaptive"
-                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer h-full"
+                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary transition-all cursor-pointer h-full"
               >
                 <BrainCircuit className="mb-3 h-6 w-6" />
                 <span className="text-sm font-medium">Adaptive</span>
-                <span className="text-xs text-muted-foreground text-center mt-1">Focus on weak topics</span>
+                <span className="text-xs text-muted-foreground text-center mt-1">Focus on weak areas</span>
               </Label>
             </div>
           </RadioGroup>
@@ -145,8 +145,8 @@ function NewExamForm() {
           <div className="space-y-2">
             <Label htmlFor="exam-type">Exam Target</Label>
             <Select value={examType} onValueChange={setExamType}>
-              <SelectTrigger id="exam-type" className="bg-background/50 border-white/10">
-                <SelectValue placeholder="Select target" />
+              <SelectTrigger id="exam-type">
+                <SelectValue placeholder="Target" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="SBI PO">SBI PO</SelectItem>
@@ -158,27 +158,27 @@ function NewExamForm() {
           <div className="space-y-2">
             <Label htmlFor="difficulty">Difficulty</Label>
             <Select value={difficulty} onValueChange={setDifficulty}>
-              <SelectTrigger id="difficulty" className="bg-background/50 border-white/10">
-                <SelectValue placeholder="Select difficulty" />
+              <SelectTrigger id="difficulty">
+                <SelectValue placeholder="Difficulty" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="easy">Beginner</SelectItem>
-                <SelectItem value="medium">Intermediate</SelectItem>
-                <SelectItem value="hard">Expert</SelectItem>
+                <SelectItem value="easy">Easy</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="hard">Hard</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="num-questions">Number of Questions</Label>
+          <Label htmlFor="num-questions">Questions</Label>
           <Select value={numQuestions} onValueChange={setNumQuestions}>
-            <SelectTrigger id="num-questions" className="bg-background/50 border-white/10">
-              <SelectValue placeholder="Select amount" />
+            <SelectTrigger id="num-questions">
+              <SelectValue placeholder="Amount" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="5">5 Questions (Fast)</SelectItem>
-              <SelectItem value="10">10 Questions (Standard)</SelectItem>
+              <SelectItem value="5">5 Questions</SelectItem>
+              <SelectItem value="10">10 Questions</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -192,7 +192,7 @@ function NewExamForm() {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" /> 
-              AI is Crafting Your Exam...
+              Generating...
             </>
           ) : "Generate & Start Test"}
         </Button>
