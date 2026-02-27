@@ -34,7 +34,7 @@ export default function NewExamPage() {
     if (user && user.difficultyPreference) {
       setDifficulty(user.difficultyPreference)
     }
-  }, [searchParams])
+  }, [searchParams, getUser])
 
   const handleStart = async () => {
     setLoading(true)
@@ -101,7 +101,7 @@ export default function NewExamPage() {
 
   return (
     <div className="container max-w-2xl mx-auto py-10 px-4">
-      <Card className="glass-morphism border-white/10" suppressHydrationWarning>
+      <Card className="glass-morphism border-white/10">
         <CardHeader className="text-center">
           <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
             <Zap className="text-primary w-6 h-6" />
@@ -146,7 +146,7 @@ export default function NewExamPage() {
             <div className="space-y-2">
               <Label htmlFor="exam-type">Exam Target</Label>
               <Select value={examType} onValueChange={setExamType}>
-                <SelectTrigger id="exam-type" className="bg-background/50 border-white/10">
+                <SelectTrigger id="exam-type" className="bg-background/50 border-white/10" hydration-warning="true">
                   <SelectValue placeholder="Select target" />
                 </SelectTrigger>
                 <SelectContent>
@@ -159,7 +159,7 @@ export default function NewExamPage() {
             <div className="space-y-2">
               <Label htmlFor="difficulty">Difficulty</Label>
               <Select value={difficulty} onValueChange={setDifficulty}>
-                <SelectTrigger id="difficulty" className="bg-background/50 border-white/10">
+                <SelectTrigger id="difficulty" className="bg-background/50 border-white/10" hydration-warning="true">
                   <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
                 <SelectContent>
@@ -174,7 +174,7 @@ export default function NewExamPage() {
           <div className="space-y-2">
             <Label htmlFor="num-questions">Number of Questions</Label>
             <Select value={numQuestions} onValueChange={setNumQuestions}>
-              <SelectTrigger id="num-questions" className="bg-background/50 border-white/10">
+              <SelectTrigger id="num-questions" className="bg-background/50 border-white/10" hydration-warning="true">
                 <SelectValue placeholder="Select amount" />
               </SelectTrigger>
               <SelectContent>
