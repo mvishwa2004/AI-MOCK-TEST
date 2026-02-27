@@ -34,9 +34,10 @@ function NewExamForm() {
     if (user && user.difficultyPreference) {
       setDifficulty(user.difficultyPreference)
     }
-  }, [searchParams, getUser])
+  }, [searchParams])
 
   const handleStart = async () => {
+    if (!mounted) return
     setLoading(true)
     try {
       const user = getUser()
