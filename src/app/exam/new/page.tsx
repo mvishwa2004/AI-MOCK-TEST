@@ -15,7 +15,7 @@ import { generateAdaptiveMockExam } from "@/ai/flows/generate-adaptive-mock-exam
 export default function NewExamPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { getUser, saveExam } = useAppStore()
+  const { getUser, saveUser, getExams, saveExam } = useAppStore()
   const [loading, setLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
   
@@ -31,8 +31,10 @@ export default function NewExamPage() {
       setIsAdaptive(true)
     }
     const user = getUser()
-    if (user.difficultyPreference) setDifficulty(user.difficultyPreference)
-  }, [searchParams, getUser])
+    if (user && user.difficultyPreference) {
+      setDifficulty(user.difficultyPreference)
+    }
+  }, [searchParams])
 
   const handleStart = async () => {
     setLoading(true)
