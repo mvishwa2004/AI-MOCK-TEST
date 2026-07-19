@@ -4,41 +4,41 @@
 
 @layer base {
   :root {
-    --background: 271 60% 10%;
-    --foreground: 0 0% 98%;
-    --card: 271 60% 13%;
-    --card-foreground: 0 0% 98%;
-    --popover: 271 60% 13%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 271 55% 35%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 271 55% 20%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 271 40% 20%;
-    --muted-foreground: 271 20% 70%;
-    --accent: 240 71% 60%;
-    --accent-foreground: 0 0% 98%;
+    --background: 210 40% 98%;
+    --foreground: 217 39% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 217 39% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 217 39% 11%;
+    --primary: 215 90% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 95% 55%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 10% 80%;
+    --muted-foreground: 217 10% 40%;
+    --accent: 38 92% 50%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 271 55% 25%;
-    --input: 271 55% 25%;
-    --ring: 240 71% 60%;
-    --radius: 0.75rem;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 20% 90%;
+    --input: 210 20% 95%;
+    --ring: 215 90% 45%;
+    --radius: 0.5rem;
 
-    --chart-1: 271 55% 35%;
-    --chart-2: 240 71% 60%;
-    --chart-3: 199 89% 48%;
+    --chart-1: 215 90% 45%;
+    --chart-2: 38 92% 50%;
+    --chart-3: 240 71% 60%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    --sidebar-background: 271 60% 8%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 271 55% 35%;
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 217 39% 11%;
+    --sidebar-primary: 215 90% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 271 55% 15%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 271 55% 15%;
-    --sidebar-ring: 240 71% 60%;
+    --sidebar-accent: 38 92% 50%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 20% 90%;
+    --sidebar-ring: 215 90% 45%;
   }
 }
 
@@ -53,11 +53,11 @@
 }
 
 .glass-morphism {
-  @apply bg-card/60 backdrop-blur-md border border-white/10;
+  @apply bg-white/50 backdrop-blur-sm border border-border;
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#59288A] to-[#5252E0];
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#1D4ED8] to-[#0369a1];
 }
 
 /* Custom scrollbar */

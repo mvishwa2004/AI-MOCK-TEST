@@ -1,6 +1,7 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: process.cwd(),
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
@@ -29,6 +30,14 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:8081/:path*',
+      },
+    ];
   },
 };
 

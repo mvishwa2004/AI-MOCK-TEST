@@ -4,6 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BrainCircuit, Users, FileQuestion, Settings, ShieldCheck, Database } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+
+export const dynamic = 'force-dynamic'
 
 export default function AdminDashboard() {
   return (

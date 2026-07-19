@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { useAppStore } from "@/lib/store"
 import { 
   LayoutDashboard, 
   FileText, 
@@ -43,26 +44,27 @@ const items = [
 
 export function DashboardNav() {
   const pathname = usePathname()
+  const router = useRouter()
+  const { logout } = useAppStore()
 
   return (
-    <nav className="flex flex-col h-full bg-sidebar border-r border-sidebar-border px-4 py-6 w-64 shrink-0">
-      <div className="flex items-center space-x-2 px-2 mb-10">
-        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-          <BrainCircuit className="text-white w-5 h-5" />
+    <nav className="flex flex-col h-full bg-white border-r border-border px-4 py-6 w-64 shrink-0">
+      <div className="flex items-center gap-2 mb-8 pb-4 border-b border-border">
+        <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+          <BrainCircuit className="h-5 w-5 text-white" />
         </div>
-        <span className="text-lg font-bold">QuantumQuizzes</span>
+        <span className="font-bold text-lg text-foreground">BankMaster</span>
       </div>
-      
       <div className="space-y-1">
         {items.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className={cn(
-              "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors",
+              "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
               pathname === item.href
                 ? "bg-primary text-white"
-                : "text-muted-foreground hover:bg-sidebar-accent hover:text-white"
+                : "text-foreground hover:bg-blue-50 hover:text-primary"
             )}
           >
             <item.icon className="h-4 w-4" />
@@ -72,13 +74,17 @@ export function DashboardNav() {
       </div>
 
       <div className="mt-auto">
-        <Link
-          href="/auth/login"
-          className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-400 hover:bg-red-400/10 rounded-md transition-colors"
+        <button
+          type="button"
+          onClick={() => {
+            logout()
+            router.push("/auth/login")
+          }}
+          className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           Logout
-        </Link>
+        </button>
       </div>
     </nav>
   )
