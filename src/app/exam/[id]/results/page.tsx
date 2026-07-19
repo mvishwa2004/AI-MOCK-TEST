@@ -76,7 +76,8 @@ export default function ResultPage() {
     )
   }
 
-  const sectionSummary = buildSectionSummary(exam.result.topicAnalysis)
+  const result = exam.result!
+  const sectionSummary = buildSectionSummary(result.topicAnalysis)
   const weakSections = sectionSummary.filter((item) => item.score < 70).map((item) => item.section)
   const strongSections = sectionSummary.filter((item) => item.score >= 80).map((item) => item.section)
   const suggestionText = weakSections.length > 0
@@ -85,7 +86,7 @@ export default function ResultPage() {
       ? `Great work in ${strongSections.join(', ')}. Maintain your strengths and keep refining all sections.`
       : 'Continue practicing all sections and use topic-specific questions to build consistency.'
 
-  const score = Math.round(exam.result.overallScore)
+  const score = Math.round(result.overallScore)
 
   return (
     <div className="container max-w-5xl mx-auto py-10 px-4 space-y-8">
@@ -124,7 +125,7 @@ export default function ResultPage() {
           </CardHeader>
           <CardContent>
             <p className="text-sm leading-relaxed italic text-muted-foreground">
-              &quot;{exam.result.overallFeedback}&quot;
+              &quot;{result.overallFeedback}&quot;
             </p>
           </CardContent>
         </Card>
@@ -163,7 +164,7 @@ export default function ResultPage() {
             <CardTitle>Topic Analysis</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {exam.result.topicAnalysis.map((topic) => (
+            {result.topicAnalysis.map((topic) => (
               <div key={topic.topic} className="space-y-2">
                 <div className="flex justify-between items-center text-sm">
                   <span className="font-medium">{topic.topic}</span>
@@ -185,7 +186,7 @@ export default function ResultPage() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2 mb-6">
-              {exam.result.weakestTopics.map((topic) => (
+              {result.weakestTopics.map((topic) => (
                 <Badge key={topic} variant="destructive" className="px-3 py-1 bg-destructive/10 text-destructive border-destructive/20 uppercase tracking-tighter">
                   {topic}
                 </Badge>
@@ -198,8 +199,8 @@ export default function ResultPage() {
               <div className="space-y-1">
                 <p className="font-bold text-sm">Recommendation for Students</p>
                 <p className="text-xs text-muted-foreground">
-                  {exam.result.weakestTopics.length > 0
-                    ? <>Based on your errors, we recommend taking an <b>Adaptive Mock</b> focused on {exam.result.weakestTopics[0]}. This will help improve your weakest area.</>
+                  {result.weakestTopics.length > 0
+                    ? <>Based on your errors, we recommend taking an <b>Adaptive Mock</b> focused on {result.weakestTopics[0]}. This will help improve your weakest area.</>
                     : <>Good progress so far. Continue with an <b>Adaptive Mock</b> to strengthen your overall performance.</>}
                 </p>
                 <Button asChild size="sm" variant="link" className="p-0 h-auto text-accent text-xs">
@@ -217,7 +218,7 @@ export default function ResultPage() {
           <h2 className="text-2xl font-bold">Detailed Question Review</h2>
         </div>
         <Accordion type="single" collapsible className="w-full space-y-4">
-          {(exam.result.questionEvaluations ?? []).map((evalItem, i) => {
+          {(result.questionEvaluations ?? []).map((evalItem, i) => {
             const originalQuestion = exam.questions.find(q => q.questionText === evalItem.questionText)
             const questionResult = exam.result!.results?.find((result) => result.question === evalItem.questionText)
             const selectedOptionText = originalQuestion?.options[evalItem.studentAnswer.charCodeAt(0) - 65]
@@ -295,7 +296,7 @@ export default function ResultPage() {
               </AccordionItem>
             )
           })}
-          {(exam.result.questionEvaluations ?? []).length === 0 && (
+          {(result.questionEvaluations ?? []).length === 0 && (
             <Card className="glass-morphism border-white/10 p-6 text-center text-muted-foreground">
               No detailed question explanations are available for this result yet.
             </Card>

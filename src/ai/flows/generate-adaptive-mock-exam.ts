@@ -39,6 +39,13 @@ const TopicDistributionSchema = z.object({
   questionCount: z.number().int(),
 });
 
+type LocalAdaptiveQuestionTemplate = {
+  question: string;
+  options: string[];
+  correctAnswer: 'A' | 'B' | 'C' | 'D';
+  explanation?: string;
+};
+
 const GenerateAdaptiveMockExamOutputSchema = z.object({
   examQuestions: z.array(ExamQuestionSchema),
   focusAreas: z.array(z.string()),
@@ -271,6 +278,10 @@ function normalizeQuestionText(questionText?: string) {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, ' ');
+}
+
+function normalizeAdaptiveQuestionText(questionText?: string) {
+  return normalizeQuestionText(questionText);
 }
 
 const localAdaptiveQuestionBank: Record<string, Record<GenerateAdaptiveMockExamInput['difficultyLevel'], Array<{
@@ -548,7 +559,7 @@ function buildGeneratedLocalQuestion(
     const ratioValue = Math.round((ratioB / (ratioA + ratioB)) * totalValue);
     const seriesAnswer = seriesBase * 2 + seriesBase + ((seed - 1) % 5);
 
-    const variants = [
+    const variants: LocalAdaptiveQuestionTemplate[] = [
       {
         question: `A loan of Rs. ${principal} carries simple interest at ${rate}% per annum for ${time} year(s). What is the interest amount?`,
         options: [`A) Rs. ${simpleInterest}`, `B) Rs. ${simpleInterest + 25}`, `C) Rs. ${simpleInterest - 15}`, `D) Rs. ${simpleInterest + 50}`],
@@ -588,7 +599,7 @@ function buildGeneratedLocalQuestion(
     };
   }
 
-  const variants = [
+  const variants: LocalAdaptiveQuestionTemplate[] = [
     {
       question: `A bank officer walks 3 km north, then 4 km east, and then 3 km south. In which direction is he from the starting point?`,
       options: ['A) North', 'B) South', 'C) East', 'D) West'],

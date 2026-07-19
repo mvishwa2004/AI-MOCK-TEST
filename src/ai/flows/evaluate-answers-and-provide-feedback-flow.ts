@@ -16,6 +16,8 @@ const ExamQuestionAttemptSchema = z.object({
   marks: z.number().optional(),
 });
 
+type ExamQuestionAttempt = z.infer<typeof ExamQuestionAttemptSchema>;
+
 const EvaluateAnswersAndProvideFeedbackInputSchema = z.object({
   examAttempt: z.array(ExamQuestionAttemptSchema),
 });
@@ -164,7 +166,7 @@ function buildFeedbackForTopic(topic: string, performancePercentage: number) {
   return `Weak performance in ${topic}. Spend extra time practicing ${topic} questions and revising key concepts.`;
 }
 
-function computeLocalTopicAnalysis(attempts: Array<ExamQuestionAttemptSchema & { isCorrect: boolean }>) {
+function computeLocalTopicAnalysis(attempts: Array<ExamQuestionAttempt & { isCorrect: boolean }>) {
   const stats = new Map<string, { correct: number; total: number }>();
 
   for (const attempt of attempts) {

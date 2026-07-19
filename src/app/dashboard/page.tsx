@@ -37,7 +37,7 @@ export default function DashboardPage() {
   if (!user) return null
 
   const defaultWeakTopics = ["English", "Quantitative Aptitude", "Logical Reasoning"]
-  const hasExamAnalysis = exams.some((exam) => exam.result?.topicAnalysis?.length > 0)
+  const hasExamAnalysis = exams.some((exam) => (exam.result?.topicAnalysis?.length ?? 0) > 0)
   const weakTopics = Array.isArray(user.weakTopics) && user.weakTopics.length > 0
     ? user.weakTopics
     : defaultWeakTopics
